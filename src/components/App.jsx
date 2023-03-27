@@ -30,7 +30,7 @@ export const App = () => {
           toast.error('Sorry! Nothing found. Try again');
         }
         setIsLoadMore(response.data.hits.length === 12);
-        setImages(prevState => [...prevState, ...response.data.hits]);
+        setImages(state => [...state, ...response.data.hits]);
       } catch (error) {
         console.log(error);
       } finally {
@@ -43,7 +43,9 @@ export const App = () => {
   const handleSubmit = (searchValues, { resetForm }) => {
     setQuery(searchValues);
     setPage(1);
-    setImages([]);
+    if ((searchValues === query && page !== 1) || searchValues !== query) {
+      setImages([]);
+    }
     resetForm();
   };
 
@@ -64,7 +66,7 @@ export const App = () => {
       )}
       {isLoad && <Loader />}
       {isLoadMore && !isLoad && (
-        <Button onClick={() => setPage(prevState => prevState + 1)} />
+        <Button onClick={() => setPage(state => state + 1)} />
       )}
       <ToastContainer autoClose={1500} />
       {isModalOpen && <Modal largImage={largeImageURL} onClose={toggleModal} />}
